@@ -3,8 +3,15 @@ import Project from "../models/project.model";
 
 const getProjectsFromDB = async (user: string, queries: TQuery) => {
   try {
-    const { status } = queries;
-    const projects = await Project.find({ status: status || "active", user });
+    const { status, limit, page } = queries;
+
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const projects = await Project.find({ status: status || "active", user })
+      .skip(skip)
+      .limit(limitNumber);
 
     if (!projects.length) {
       const error = new Error("No project found!");
