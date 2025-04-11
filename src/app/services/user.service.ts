@@ -3,6 +3,7 @@ import { TUser } from "../interfaces/user.interface";
 import User from "../models/user.model";
 import generateRefreshToken from "../utils/generateRefreshToken";
 import jwt from "jsonwebtoken";
+import sendMail from "../utils/sendMail";
 
 const createUserToDB = async (payload: TUser) => {
   const {
@@ -125,9 +126,37 @@ const resetPasswordFromDB = async (newPassword: string, token: string) => {
   }
 };
 
+const forgetPasswordFromDB = async (email: string) => {
+  try {
+    if (!email) {
+      const error = new Error("Email is required");
+      (error as any).status = 400;
+      throw error;
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      const error = new Error("Invalid credentials");
+      (error as any).status = 404;
+      throw error;
+    }
+
+    const token = user.generateAuthToken();
+    const link = `${config.FRONTEND_URL}/reset-password/${token}`; // This link should be sent to the user's email
+
+    const message = `<p>Click on the link to reset your password: ${link}</p>`;
+
+    await sendMail(email, "Reset Password", message);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const userServices = {
   createUserToDB,
   loginUserFromDB,
   updateUserFromDB,
   resetPasswordFromDB,
+  forgetPasswordFromDB,
 };

@@ -163,6 +163,25 @@ const resetPassword = async (
   }
 };
 
+const forgetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body;
+
+    await userServices.forgetPasswordFromDB(email);
+
+    res.status(200).json({
+      success: true,
+      message: "Forgot password link sent to your email",
+    });
+  } catch (error: any) {
+    next({ status: error.status, message: error.message });
+  }
+};
+
 export const userControllers = {
   registerUser,
   loginUser,
@@ -171,4 +190,5 @@ export const userControllers = {
   logoutUser,
   getRefreshToken,
   resetPassword,
+  forgetPassword,
 };
