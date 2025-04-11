@@ -140,6 +140,29 @@ const getRefreshToken = async (
   }
 };
 
+const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { newPassword } = req.body;
+    const token =
+      req.body.token ||
+      req.cookies?.token ||
+      req.headers.authorization?.split(" ")[1];
+
+    await userServices.resetPasswordFromDB(newPassword, token);
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset was successful",
+    });
+  } catch (error: any) {
+    next({ status: error.status, message: error.message });
+  }
+};
+
 export const userControllers = {
   registerUser,
   loginUser,
@@ -147,4 +170,5 @@ export const userControllers = {
   updateUserProfile,
   logoutUser,
   getRefreshToken,
+  resetPassword,
 };

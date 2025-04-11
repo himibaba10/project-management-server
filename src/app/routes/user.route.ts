@@ -32,4 +32,6 @@ userRouter.post("/logout", auth.authUser, userControllers.logoutUser);
 // Generate refresh token
 userRouter.post("/refresh-token", userControllers.getRefreshToken);
 
+userRouter.post("/reset-password", userControllers.resetPassword);
+
 export default userRouter;
