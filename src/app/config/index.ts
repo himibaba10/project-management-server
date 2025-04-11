@@ -3,4 +3,5 @@ export default {
   DB_CONNECT: process.env.DB_CONNECT,
   JWT_SECRET: process.env.JWT_SECRET,
   SALT: process.env.SALT,
+  JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
 };

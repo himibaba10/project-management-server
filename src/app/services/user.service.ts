@@ -1,5 +1,6 @@
 import { TUser } from "../interfaces/user.interface";
 import User from "../models/user.model";
+import generateRefreshToken from "../utils/generateRefreshToken";
 
 const createUserToDB = async (payload: TUser) => {
   const {
@@ -57,12 +58,13 @@ const loginUserFromDB = async (payload: Partial<TUser>) => {
   }
 
   const token = user.generateAuthToken();
+  const refreshToken = generateRefreshToken({ _id: user._id as string });
 
   // Making the user document as plain object
   const userData = user.toObject();
   delete (userData as { password?: string }).password; // Remove the password field from the object
 
-  return { user: userData, token };
+  return { user: userData, token, refreshToken };
 };
 
 const updateUserFromDB = async (payload: Partial<TUser> & { user: string }) => {
