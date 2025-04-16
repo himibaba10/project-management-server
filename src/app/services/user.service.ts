@@ -5,6 +5,17 @@ import generateRefreshToken from "../utils/generateRefreshToken";
 import jwt from "jsonwebtoken";
 import sendMail from "../utils/sendMail";
 
+const getUsersFromDB = async (currentUser: TUser) => {
+  try {
+    // Get all users from database except the current user
+    const users = await User.find({ email: { $ne: currentUser.email } });
+
+    return users;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
 const createUserToDB = async (payload: TUser) => {
   const {
     fullName: { firstName, lastName },
@@ -154,6 +165,7 @@ const forgetPasswordFromDB = async (email: string) => {
 };
 
 export const userServices = {
+  getUsersFromDB,
   createUserToDB,
   loginUserFromDB,
   updateUserFromDB,

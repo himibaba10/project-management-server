@@ -19,7 +19,7 @@ app.use(helmet());
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Hello, World!");
+  res.send("Welcome to project management API");
 });
 
 app.use("/api/v1/users", userRouter);

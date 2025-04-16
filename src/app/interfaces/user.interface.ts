@@ -1,3 +1,5 @@
+export type TUserRole = "user" | "admin";
+
 export type TUser = {
   fullName: {
     firstName: string;
@@ -5,4 +7,5 @@ export type TUser = {
   };
   email: string;
   password: string;
+  role: TUserRole;
 };

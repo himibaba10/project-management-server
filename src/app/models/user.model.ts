@@ -38,6 +38,11 @@ const userSchema = new Schema<IUser>(
       required: true,
       select: false, // Ensure password is not included in queries by default
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
   },
   {
     timestamps: true,

@@ -6,6 +6,20 @@ import config from "../config";
 import generateAccessToken from "../utils/generateAccessToken";
 import generateRefreshToken from "../utils/generateRefreshToken";
 
+const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await userServices.getUsersFromDB((req as any).user);
+
+    res.status(201).json({
+      success: true,
+      message: "Users fetched successfully",
+      data: users,
+    });
+  } catch (error: any) {
+    next({ status: error.status, message: error.message });
+  }
+};
+
 const registerUser = async (
   req: Request,
   res: Response,
@@ -183,6 +197,7 @@ const forgetPassword = async (
 };
 
 export const userControllers = {
+  getUsers,
   registerUser,
   loginUser,
   getUserProfile,

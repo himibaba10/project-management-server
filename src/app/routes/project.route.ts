@@ -6,7 +6,7 @@ import projectConstants from "../constants/project.constant";
 const projectRouter = Router();
 
 // Since every route is protected, hence this middleware is used globally
-projectRouter.use(auth.authUser);
+projectRouter.use(auth.authUser());
 
 // Get all projects
 projectRouter.get("/", projectControllers.getProjects);

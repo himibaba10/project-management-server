@@ -6,6 +6,8 @@ import userConstants from "../constants/user.constant";
 
 const userRouter = Router();
 
+userRouter.get("/", auth.authUser("admin"), userControllers.getUsers);
+
 userRouter.post(
   "/register",
   userConstants.validateUserRegistration,
@@ -18,16 +20,16 @@ userRouter.post(
   userControllers.loginUser
 );
 
-userRouter.get("/profile", auth.authUser, userControllers.getUserProfile);
+userRouter.get("/profile", auth.authUser(), userControllers.getUserProfile);
 
 userRouter.put(
   "/profile",
-  auth.authUser,
+  auth.authUser(),
   userConstants.validateUserUpdate,
   userControllers.updateUserProfile
 );
 
-userRouter.post("/logout", auth.authUser, userControllers.logoutUser);
+userRouter.post("/logout", auth.authUser(), userControllers.logoutUser);
 
 // Generate refresh token
 userRouter.post("/refresh-token", userControllers.getRefreshToken);
