@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Query } from "mongoose";
 import bcrypt from "bcrypt";
 import config from "../config";
 import { TUser } from "../interfaces/user.interface";
 import generateAuthToken from "../utils/generateAuthToken";
+import { NextFunction } from "express";
 
 // Extend the TUser type to include Mongoose Document methods
 interface IUser extends TUser, Document {
@@ -43,11 +44,22 @@ const userSchema = new Schema<IUser>(
       enum: ["user", "admin"],
       default: "user",
     },
+    status: {
+      type: String,
+      enum: ["active", "blocked", "deleted"],
+      default: "active",
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// Get users without deleted status
+userSchema.pre(/^find/, function (this: Query<any, IUser>, next: any) {
+  this.where({ status: { $ne: "deleted" } });
+  next();
+});
 
 // Hash password before saving
 userSchema.pre<IUser>("save", async function (next) {

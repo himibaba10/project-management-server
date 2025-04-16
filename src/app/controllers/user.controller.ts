@@ -118,6 +118,19 @@ const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await userServices.deleteUserFromDB(req.params.userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error: any) {
+    next({ status: error.status, message: error.message });
+  }
+};
+
 const getRefreshToken = async (
   req: Request,
   res: Response,
@@ -203,6 +216,7 @@ export const userControllers = {
   getUserProfile,
   updateUserProfile,
   logoutUser,
+  deleteUser,
   getRefreshToken,
   resetPassword,
   forgetPassword,

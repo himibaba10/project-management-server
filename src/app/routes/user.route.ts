@@ -31,6 +31,12 @@ userRouter.put(
 
 userRouter.post("/logout", auth.authUser(), userControllers.logoutUser);
 
+userRouter.delete(
+  "/:userId",
+  auth.authUser("admin"),
+  userControllers.deleteUser
+);
+
 // Generate refresh token
 userRouter.post("/refresh-token", userControllers.getRefreshToken);
 

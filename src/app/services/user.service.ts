@@ -4,6 +4,8 @@ import User from "../models/user.model";
 import generateRefreshToken from "../utils/generateRefreshToken";
 import jwt from "jsonwebtoken";
 import sendMail from "../utils/sendMail";
+import { startSession } from "mongoose";
+import Project from "../models/project.model";
 
 const getUsersFromDB = async (currentUser: TUser) => {
   try {
@@ -79,6 +81,33 @@ const loginUserFromDB = async (payload: Partial<TUser>) => {
   delete (userData as { password?: string }).password; // Remove the password field from the object
 
   return { user: userData, token, refreshToken };
+};
+
+const deleteUserFromDB = async (userId: string) => {
+  const session = await startSession();
+  try {
+    session.startTransaction();
+
+    // Delete projects before deleting the user
+    await Project.deleteMany({ user: userId }).session(session);
+
+    // Delete user (Soft delete)
+    const user = await User.findById(userId).session(session);
+
+    if (!user) {
+      throw new Error("No users found");
+    }
+
+    user.status = "deleted";
+    await user.save({ session });
+
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
 };
 
 const updateUserFromDB = async (payload: Partial<TUser> & { user: string }) => {
@@ -168,6 +197,7 @@ export const userServices = {
   getUsersFromDB,
   createUserToDB,
   loginUserFromDB,
+  deleteUserFromDB,
   updateUserFromDB,
   resetPasswordFromDB,
   forgetPasswordFromDB,

@@ -1,4 +1,5 @@
 export type TUserRole = "user" | "admin";
+export type TUserStatus = "active" | "blocked" | "deleted";
 
 export type TUser = {
   fullName: {
@@ -8,4 +9,5 @@ export type TUser = {
   email: string;
   password: string;
   role: TUserRole;
+  status: TUserStatus;
 };
