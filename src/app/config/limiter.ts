@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit";
 
 const limiter = rateLimit({
-  limit: 10,
+  limit: 40,
   standardHeaders: true,
   legacyHeaders: false,
 });

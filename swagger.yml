@@ -43,3 +43,96 @@ paths:
           description: User created successfully
         400:
           description: Invalid input
+  /users/login:
+    post:
+      summary: Login a user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  example: mysecurepassword
+      responses:
+        200:
+          description: User logged in successfully
+        400:
+          description: Invalid input
+  /users/:
+    get:
+      summary: Get users (Only admins can do this)
+      tags: [Users]
+      responses:
+        200:
+          description: Users fetched successfully
+        404:
+          description: No user found
+  /users/profile:
+    get:
+      summary: Get user profile
+      tags: [Users]
+      responses:
+        200:
+          description: User profile fetched successfully
+        404:
+          description: No user found
+    put:
+      summary: Update user information
+      description: Updates the user's profile information like name, email, or password
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Doe
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  format: password
+                  example: StrongPassword123
+      responses:
+        200:
+          description: User profile updated successfully
+        404:
+          description: No user found
+  /users/{userId}:
+    delete:
+      summary: Delete a user by ID (Only admins can do this)
+      description: Soft deletes a user and their associated projects)
+      tags: [Users]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to delete
+          schema:
+            type: string
+      responses:
+        200:
+          description: Users fetched successfully
+        404:
+          description: No user found

@@ -10,7 +10,7 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const users = await userServices.getUsersFromDB((req as any).user);
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Users fetched successfully",
       data: users,
@@ -58,7 +58,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "User logged in successfully",
       data: { user, token },
@@ -97,7 +97,7 @@ const updateUserProfile = async (
 
     res.status(200).json({
       success: true,
-      message: "User profile fetched successfully",
+      message: "User profile updated successfully",
       data: updatedUser,
     });
   } catch (error: any) {

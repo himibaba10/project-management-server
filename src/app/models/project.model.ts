@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { TProject, TTask } from "../interfaces/project.interface";
 
 const taskSchema = new Schema<TTask>(

@@ -9,8 +9,12 @@ import Project from "../models/project.model";
 
 const getUsersFromDB = async (currentUser: TUser) => {
   try {
-    // Get all users from database except the current user
-    const users = await User.find({ email: { $ne: currentUser.email } });
+    const users = await User.find({});
+
+    if (!users.length) {
+      const error = new Error("No user found");
+      (error as any).status = 404;
+    }
 
     return users;
   } catch (error: any) {
@@ -26,7 +30,8 @@ const createUserToDB = async (payload: TUser) => {
   } = payload;
 
   if (!firstName || !email || !password) {
-    throw new Error("All fields are required");
+    const error = new Error("All fields are required");
+    (error as any).status = 400;
   }
 
   try {
