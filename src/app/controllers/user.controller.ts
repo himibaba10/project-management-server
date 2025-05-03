@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 import generateAccessToken from "../utils/generateAccessToken";
 import generateRefreshToken from "../utils/generateRefreshToken";
+import BlacklistedToken from "../models/blacklistedToken.model";
 
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -107,6 +108,15 @@ const updateUserProfile = async (
 
 const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const token =
+      req.cookies?.token || req.headers.authorization?.split(" ")[1];
+
+    if (token) {
+      await BlacklistedToken.create({
+        token,
+      });
+    }
+
     res.clearCookie("token");
 
     res.status(200).json({

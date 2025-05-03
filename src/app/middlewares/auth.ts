@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 import User from "../models/user.model";
 import { TUserRole } from "../interfaces/user.interface";
+import BlacklistedToken from "../models/blacklistedToken.model";
 
 const authUser = (role?: TUserRole) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -14,6 +15,13 @@ const authUser = (role?: TUserRole) => {
     }
 
     try {
+      // Check if the token is blacklisted
+      const isBlacklistedToken = await BlacklistedToken.findOne({ token });
+
+      if (isBlacklistedToken) {
+        return next({ status: 401, message: "Unauthorized access" });
+      }
+
       // Verify token
       const decoded = (await jwt.verify(
         token,
