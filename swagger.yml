@@ -68,6 +68,15 @@ paths:
           description: User logged in successfully
         400:
           description: Invalid input
+  /users/logout:
+    post:
+      summary: Logout user
+      tags: [Users]
+      responses:
+        200:
+          description: User logged out successfully
+        404:
+          description: No user found
   /users/:
     get:
       summary: Get users (Only admins can do this)
@@ -119,6 +128,26 @@ paths:
           description: User profile updated successfully
         404:
           description: No user found
+  /users/reset-password:
+    post:
+      summary: Reset password (Only works when logged in)
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                  format: password
+                  example: StrongPassword123
+      responses:
+        200:
+          description: Password reset was successful
+        400:
+          description: "`All fields are required` or `Invalid token`"
   /users/{userId}:
     delete:
       summary: Delete a user by ID (Only admins can do this)
