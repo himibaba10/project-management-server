@@ -7,11 +7,19 @@ import swaggerDocs from "./app/config/swagger";
 const server = http.createServer(app);
 
 const startServer = async () => {
-  await connectToDB();
-  server.listen(config.PORT, async () => {
-    console.log(`Server is running on port ${config.PORT}`);
-    swaggerDocs(app, config.PORT!); // Initialize Swagger documentation
-  });
+  try {
+    await connectToDB();
+    server.listen(config.PORT, async () => {
+      console.log(`Server is running on port ${config.PORT}`);
+
+      // Initialize Swagger documentation
+      swaggerDocs(app, config.PORT!);
+    });
+  } catch (error) {
+    console.log("Failed to start server");
+    console.error(error);
+    process.exit(1);
+  }
 };
 
 startServer();
