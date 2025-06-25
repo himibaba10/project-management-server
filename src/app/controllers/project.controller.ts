@@ -49,7 +49,7 @@ const createProject = async (
 ) => {
   if (validateErrors(req, res)) return;
   try {
-    req.body.user = (req as any).user;
+    req.body.owner = (req as any).user;
 
     const project = await projectServices.createProjectToDB(req.body);
 
@@ -70,7 +70,7 @@ const updateProject = async (
 ) => {
   if (validateErrors(req, res)) return;
   try {
-    req.body.user = (req as any).user;
+    req.body.owner = (req as any).user;
 
     const project = await projectServices.updateProjectToDB(
       req.params.projectId,

@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose";
+import { TUser } from "./user.interface";
 
 export type TQuery = {
   page: string;
@@ -23,9 +24,10 @@ export type TTask = {
 
 export type TProject = {
   _id: ObjectId;
-  user: ObjectId;
+  owner: ObjectId;
   title: string;
   description?: string;
   status: "active" | "archived";
+  collaborators?: TUser[];
   tasks?: TTask[];
 };

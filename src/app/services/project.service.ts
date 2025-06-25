@@ -9,7 +9,10 @@ const getProjectsByUserFromDB = async (user: string, queries: TQuery) => {
     const limitNumber = Number(limit) || 10;
     const skip = (pageNumber - 1) * limitNumber;
 
-    const projects = await Project.find({ status: status || "active", user })
+    const projects = await Project.find({
+      status: status || "active",
+      owner: user,
+    })
       .skip(skip)
       .limit(limitNumber);
 
@@ -34,7 +37,7 @@ const getProjectFromDB = async (
     const { priority, taskStatus, status, sortBy, asc } = queries;
 
     const project = await Project.findOne({
-      user,
+      owner: user,
       _id: projectId,
       status: status || "active",
     });
@@ -91,7 +94,7 @@ const createProjectToDB = async (payload: TProject) => {
 const updateProjectToDB = async (id: string, payload: Partial<TProject>) => {
   try {
     const project = await Project.findOneAndUpdate(
-      { _id: id, user: payload.user },
+      { _id: id, owner: payload.owner },
       payload,
       { new: true }
     );
@@ -110,7 +113,7 @@ const updateProjectToDB = async (id: string, payload: Partial<TProject>) => {
 
 const deleteProjectFromDB = async (id: string, user: string) => {
   try {
-    const project = await Project.findOneAndDelete({ _id: id, user });
+    const project = await Project.findOneAndDelete({ _id: id, owner: user });
 
     if (!project) {
       const error = new Error("No project found!");
@@ -126,7 +129,7 @@ const deleteProjectFromDB = async (id: string, user: string) => {
 
 const getTaskFromProject = async (id: string, taskId: string, user: string) => {
   try {
-    const project = await Project.findOne({ _id: id, user });
+    const project = await Project.findOne({ _id: id, owner: user });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -155,7 +158,7 @@ const addTaskToProject = async (
   try {
     const { user, ...taskPayload } = payload;
 
-    const project = await Project.findOne({ _id: id, user });
+    const project = await Project.findOne({ _id: id, owner: user });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -181,7 +184,7 @@ const udpateTaskToProject = async (
   payload: Partial<TTask> & { user: string }
 ) => {
   try {
-    const project = await Project.findOne({ _id: id, user: payload.user });
+    const project = await Project.findOne({ _id: id, owner: payload.user });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -218,7 +221,7 @@ const deleteTaskFromProject = async (
   user: string
 ) => {
   try {
-    const project = await Project.findOne({ _id: id, user });
+    const project = await Project.findOne({ _id: id, owner: user });
 
     if (!project) {
       const error = new Error("Project not found");

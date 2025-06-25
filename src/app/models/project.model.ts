@@ -18,11 +18,12 @@ const taskSchema = new Schema<TTask>(
 
 const projectSchema = new Schema<TProject>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User" },
+    owner: { type: Schema.Types.ObjectId, ref: "User" },
     title: { type: String, required: true },
     description: String,
     status: { type: String, enum: ["active", "archived"], default: "active" },
     tasks: [taskSchema],
+    collaborators: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
   },
   { timestamps: true }
 );
