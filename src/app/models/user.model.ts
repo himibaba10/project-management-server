@@ -56,10 +56,13 @@ const userSchema = new Schema<IUser>(
 );
 
 // Get users without deleted status
-userSchema.pre(/^find/, function (this: Query<any, IUser>, next: any) {
-  this.where({ status: { $ne: "deleted" } });
-  next();
-});
+userSchema.pre(
+  ["findOne", "findOneAndUpdate", "findOneAndDelete"],
+  function (this: Query<any, IUser>, next: any) {
+    this.where({ status: { $ne: "deleted" } });
+    next();
+  }
+);
 
 // Hash password before saving
 userSchema.pre<IUser>("save", async function (next) {

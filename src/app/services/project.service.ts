@@ -1,7 +1,7 @@
 import { TProject, TQuery, TTask } from "../interfaces/project.interface";
 import Project from "../models/project.model";
 
-const getProjectsFromDB = async (user: string, queries: TQuery) => {
+const getProjectsByUserFromDB = async (user: string, queries: TQuery) => {
   try {
     const { status, limit, page } = queries;
 
@@ -246,7 +246,7 @@ const deleteTaskFromProject = async (
 };
 
 export const projectServices = {
-  getProjectsFromDB,
+  getProjectsByUserFromDB,
   getProjectFromDB,
   createProjectToDB,
   updateProjectToDB,

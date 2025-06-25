@@ -3,9 +3,13 @@ import { projectServices } from "../services/project.service";
 import validateErrors from "../utils/validateErrors";
 import { TQuery } from "../interfaces/project.interface";
 
-const getProjects = async (req: Request, res: Response, next: NextFunction) => {
+const getProjectsByUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const projects = await projectServices.getProjectsFromDB(
+    const projects = await projectServices.getProjectsByUserFromDB(
       (req as any).user,
       req.query as TQuery
     );
@@ -181,7 +185,7 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const projectControllers = {
-  getProjects,
+  getProjectsByUser,
   getProject,
   createProject,
   updateProject,

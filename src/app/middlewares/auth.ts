@@ -37,7 +37,7 @@ const authUser = (role?: TUserRole) => {
         return next({ status: 401, message: "Unauthorized access" });
       }
 
-      (req as any).user = user; // Assign the user to the extended Request object
+      (req as any).user = user;
       return next();
     } catch (error: any) {
       return next({ status: 401, message: error.message });
