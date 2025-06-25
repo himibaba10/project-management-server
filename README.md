@@ -201,7 +201,7 @@ This document provides an overview of the API routes available in the Project Ma
   }
   ```
 
-#### `PUT /api/projects/:id`
+#### `PUT /api/projects/:projectId`
 - **Description**: Update an existing project.
 - **Headers**:
   ```json
@@ -233,7 +233,7 @@ This document provides an overview of the API routes available in the Project Ma
   }
   ```
 
-#### `DELETE /api/projects/:id`
+#### `DELETE /api/projects/:projectId`
 - **Description**: Delete a project.
 - **Headers**:
   ```json
@@ -253,7 +253,7 @@ This document provides an overview of the API routes available in the Project Ma
 
 ### 3. **Task Routes**
 
-#### `GET /api/projects/:id/tasks/:taskId`
+#### `GET /api/projects/:projectId/tasks/:taskId`
 - **Description**: Retrieve a specific task from a project.
 - **Headers**:
   ```json
@@ -279,7 +279,7 @@ This document provides an overview of the API routes available in the Project Ma
   }
   ```
 
-#### `POST /api/projects/:id/tasks`
+#### `POST /api/projects/:projectId/tasks`
 - **Description**: Add a new task to a project.
 - **Headers**:
   ```json
@@ -315,7 +315,7 @@ This document provides an overview of the API routes available in the Project Ma
   }
   ```
 
-#### `PUT /api/projects/:id/tasks/:taskId`
+#### `PUT /api/projects/:projectId/tasks/:taskId`
 - **Description**: Update an existing task in a project.
 - **Headers**:
   ```json
@@ -351,7 +351,7 @@ This document provides an overview of the API routes available in the Project Ma
   }
   ```
 
-#### `DELETE /api/projects/:id/tasks/:taskId`
+#### `DELETE /api/projects/:projectId/tasks/:taskId`
 - **Description**: Delete a task from a project.
 - **Headers**:
   ```json

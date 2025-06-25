@@ -12,7 +12,7 @@ projectRouter.use(auth.authUser());
 projectRouter.get("/", projectControllers.getProjectsByUser);
 
 // Get project by id
-projectRouter.get("/:id", projectControllers.getProject);
+projectRouter.get("/:projectId", projectControllers.getProject);
 
 // Create a project
 projectRouter.post(
@@ -23,32 +23,35 @@ projectRouter.post(
 
 // Update project info
 projectRouter.put(
-  "/:id",
+  "/:projectId",
   projectConstants.validateUpdateProject,
   projectControllers.updateProject
 );
 
 // Delete a project
-projectRouter.delete("/:id", projectControllers.deleteProject);
+projectRouter.delete("/:projectId", projectControllers.deleteProject);
 
 // Get a task from project
-projectRouter.get("/:id/tasks/:taskId", projectControllers.getTask);
+projectRouter.get("/:projectId/tasks/:taskId", projectControllers.getTask);
 
 // add a task within a project
 projectRouter.post(
-  "/:id/tasks",
+  "/:projectId/tasks",
   projectConstants.validateCreateTask,
   projectControllers.addTask
 );
 
 // Update task
 projectRouter.put(
-  "/:id/tasks/:taskId",
+  "/:projectId/tasks/:taskId",
   projectConstants.validateUpdateTask,
   projectControllers.updateTask
 );
 
 // Delete task from project
-projectRouter.delete("/:id/tasks/:taskId", projectControllers.deleteTask);
+projectRouter.delete(
+  "/:projectId/tasks/:taskId",
+  projectControllers.deleteTask
+);
 
 export default projectRouter;

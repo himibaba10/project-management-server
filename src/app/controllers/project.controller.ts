@@ -28,7 +28,7 @@ const getProject = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const project = await projectServices.getProjectFromDB(
       (req as any).user,
-      req.params.id,
+      req.params.projectId,
       req.query as TQuery
     );
 
@@ -73,7 +73,7 @@ const updateProject = async (
     req.body.user = (req as any).user;
 
     const project = await projectServices.updateProjectToDB(
-      req.params.id,
+      req.params.projectId,
       req.body
     );
 
@@ -94,7 +94,7 @@ const deleteProject = async (
 ) => {
   try {
     const project = await projectServices.deleteProjectFromDB(
-      req.params.id,
+      req.params.projectId,
       (req as any).user
     );
 
@@ -111,7 +111,7 @@ const deleteProject = async (
 const getTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const task = await projectServices.getTaskFromProject(
-      req.params.id,
+      req.params.projectId,
       req.params.taskId,
       (req as any).user
     );
@@ -132,7 +132,7 @@ const addTask = async (req: Request, res: Response, next: NextFunction) => {
     req.body.user = (req as any).user;
 
     const task = await projectServices.addTaskToProject(
-      req.params.id,
+      req.params.projectId,
       req.body
     );
 
@@ -152,7 +152,7 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
     req.body.user = (req as any).user;
 
     const task = await projectServices.udpateTaskToProject(
-      req.params.id,
+      req.params.projectId,
       req.params.taskId,
       req.body
     );
@@ -170,7 +170,7 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
 const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await projectServices.deleteTaskFromProject(
-      req.params.id,
+      req.params.projectId,
       req.params.taskId,
       (req as any).user
     );
