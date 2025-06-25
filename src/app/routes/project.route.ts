@@ -31,6 +31,12 @@ projectRouter.put(
 // Delete a project
 projectRouter.delete("/:projectId", projectControllers.deleteProject);
 
+// Add collaborator to a project
+projectRouter.post(
+  "/:projectId/add-collaborator",
+  projectControllers.addCollaboratorToProject
+);
+
 // Get a task from project
 projectRouter.get("/:projectId/tasks/:taskId", projectControllers.getTask);
 

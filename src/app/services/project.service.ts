@@ -1,5 +1,7 @@
 import { TProject, TQuery, TTask } from "../interfaces/project.interface";
+import { TUser } from "../interfaces/user.interface";
 import Project from "../models/project.model";
+import User from "../models/user.model";
 
 const getProjectsByUserFromDB = async (user: string, queries: TQuery) => {
   try {
@@ -14,7 +16,9 @@ const getProjectsByUserFromDB = async (user: string, queries: TQuery) => {
       owner: user,
     })
       .skip(skip)
-      .limit(limitNumber);
+      .limit(limitNumber)
+      .populate("owner")
+      .populate("collaborators");
 
     if (!projects.length) {
       const error = new Error("No project found!");
@@ -114,6 +118,51 @@ const updateProjectToDB = async (id: string, payload: Partial<TProject>) => {
 const deleteProjectFromDB = async (id: string, user: string) => {
   try {
     const project = await Project.findOneAndDelete({ _id: id, owner: user });
+
+    if (!project) {
+      const error = new Error("No project found!");
+      (error as any).status = 404;
+      throw error;
+    }
+
+    return project;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const addCollaboratorToProjectToDB = async (
+  id: string,
+  user: TUser,
+  collaboratorEmail: string
+) => {
+  try {
+    if (user.email === collaboratorEmail) {
+      const error = new Error("You can't add yourself as a collaborator!");
+      (error as any).status = 409;
+      throw error;
+    }
+
+    const collaborator = await User.findOne({ email: collaboratorEmail });
+
+    if (!collaborator) {
+      const error = new Error("No user found by the email!");
+      (error as any).status = 404;
+      throw error;
+    }
+
+    const project = await Project.findOneAndUpdate(
+      { _id: id, owner: user },
+      {
+        $addToSet: {
+          collaborators: collaborator._id,
+        },
+      },
+      {
+        runValidators: true,
+        new: true,
+      }
+    );
 
     if (!project) {
       const error = new Error("No project found!");
@@ -254,6 +303,7 @@ export const projectServices = {
   createProjectToDB,
   updateProjectToDB,
   deleteProjectFromDB,
+  addCollaboratorToProjectToDB,
   getTaskFromProject,
   addTaskToProject,
   udpateTaskToProject,

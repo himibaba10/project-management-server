@@ -108,6 +108,28 @@ const deleteProject = async (
   }
 };
 
+const addCollaboratorToProject = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const project = await projectServices.addCollaboratorToProjectToDB(
+      req.params.projectId,
+      (req as any).user,
+      req.body.email
+    );
+
+    res.json({
+      success: true,
+      message: "Collaborator added successfully",
+      data: project,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const task = await projectServices.getTaskFromProject(
@@ -190,6 +212,7 @@ export const projectControllers = {
   createProject,
   updateProject,
   deleteProject,
+  addCollaboratorToProject,
   getTask,
   addTask,
   updateTask,
