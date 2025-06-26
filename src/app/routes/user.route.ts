@@ -3,6 +3,7 @@ import { Router } from "express";
 import { userControllers } from "../controllers/user.controller";
 import auth from "../middlewares/auth";
 import userConstants from "../constants/user.constant";
+import authLogin from "../middlewares/authLogin";
 
 const userRouter = Router();
 
@@ -26,6 +27,7 @@ userRouter.post(
 
 userRouter.post(
   "/login",
+  authLogin,
   userConstants.validateUserLogin,
   userControllers.loginUser
 );

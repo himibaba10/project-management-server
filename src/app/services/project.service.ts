@@ -3,7 +3,7 @@ import { TUser } from "../interfaces/user.interface";
 import Project from "../models/project.model";
 import User from "../models/user.model";
 
-const getProjectsByUserFromDB = async (user: string, queries: TQuery) => {
+const getProjectsFromDB = async (user: TUser, queries: TQuery) => {
   try {
     const { status, limit, page } = queries;
 
@@ -13,7 +13,7 @@ const getProjectsByUserFromDB = async (user: string, queries: TQuery) => {
 
     const projects = await Project.find({
       status: status || "active",
-      owner: user,
+      $or: [{ owner: user }, { collaborators: user }],
     })
       .skip(skip)
       .limit(limitNumber)
@@ -298,7 +298,7 @@ const deleteTaskFromProject = async (
 };
 
 export const projectServices = {
-  getProjectsByUserFromDB,
+  getProjectsFromDB,
   getProjectFromDB,
   createProjectToDB,
   updateProjectToDB,

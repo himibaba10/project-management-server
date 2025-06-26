@@ -9,7 +9,7 @@ const projectRouter = Router();
 projectRouter.use(auth.authUser());
 
 // Get all projects
-projectRouter.get("/", projectControllers.getProjectsByUser);
+projectRouter.get("/", projectControllers.getProjects);
 
 // Get project by id
 projectRouter.get("/:projectId", projectControllers.getProject);
