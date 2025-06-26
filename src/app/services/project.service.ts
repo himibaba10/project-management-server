@@ -233,6 +233,17 @@ const addTaskToProject = async (
       throw error;
     }
 
+    const oneHourFromNow = Date.now() + 60 * 60 * 1000;
+
+    if (
+      taskPayload.dueDate?.getTime() &&
+      taskPayload.dueDate?.getTime() < oneHourFromNow
+    ) {
+      const error = new Error("Date can't be less than from an hour!");
+      (error as any).status = 404;
+      throw error;
+    }
+
     project.tasks?.push(taskPayload);
 
     const task = project.tasks?.[project.tasks.length - 1];

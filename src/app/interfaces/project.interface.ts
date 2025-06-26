@@ -16,7 +16,7 @@ export type TTask = {
   name: string;
   description?: string;
   status: "to-do" | "in-progress" | "completed";
-  dueDate?: string;
+  dueDate?: Date;
   priority?: "low" | "medium" | "high";
   createdAt?: Date;
   updatedAt?: Date;
