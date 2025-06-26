@@ -5,14 +5,14 @@ import User from "../models/user.model";
 
 const getProjectsFromDB = async (user: TUser, queries: TQuery) => {
   try {
-    const { status, limit, page } = queries;
+    const { status = "active", limit, page } = queries;
 
     const pageNumber = Number(page) || 1;
     const limitNumber = Number(limit) || 10;
     const skip = (pageNumber - 1) * limitNumber;
 
     const projects = await Project.find({
-      status: status || "active",
+      status: status,
       $or: [{ owner: user }, { collaborators: user }],
     })
       .skip(skip)
@@ -38,12 +38,12 @@ const getProjectFromDB = async (
   queries: TQuery
 ) => {
   try {
-    const { priority, taskStatus, status, sortBy, asc } = queries;
+    const { priority, taskStatus, status = "active", sortBy, asc } = queries;
 
     const project = await Project.findOne({
-      owner: user,
+      $or: [{ owner: user }, { collaborators: user }],
       _id: projectId,
-      status: status || "active",
+      status: status,
     });
 
     if (!project) {
@@ -151,6 +151,18 @@ const addCollaboratorToProjectToDB = async (
       throw error;
     }
 
+    const existingCollaborator = await Project.findOne({
+      _id: id,
+      owner: user,
+      collaborators: collaborator._id,
+    });
+
+    if (existingCollaborator) {
+      const error = new Error("Collaborator already exists!");
+      (error as any).status = 409;
+      throw error;
+    }
+
     const project = await Project.findOneAndUpdate(
       { _id: id, owner: user },
       {
@@ -178,7 +190,10 @@ const addCollaboratorToProjectToDB = async (
 
 const getTaskFromProject = async (id: string, taskId: string, user: string) => {
   try {
-    const project = await Project.findOne({ _id: id, owner: user });
+    const project = await Project.findOne({
+      _id: id,
+      $or: [{ owner: user }, { collaborators: user }],
+    });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -207,7 +222,10 @@ const addTaskToProject = async (
   try {
     const { user, ...taskPayload } = payload;
 
-    const project = await Project.findOne({ _id: id, owner: user });
+    const project = await Project.findOne({
+      _id: id,
+      $or: [{ owner: user }, { collaborators: user }],
+    });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -227,13 +245,16 @@ const addTaskToProject = async (
   }
 };
 
-const udpateTaskToProject = async (
+const updateTaskToProject = async (
   id: string,
   taskId: string,
   payload: Partial<TTask> & { user: string }
 ) => {
   try {
-    const project = await Project.findOne({ _id: id, owner: payload.user });
+    const project = await Project.findOne({
+      _id: id,
+      $or: [{ owner: payload.user }, { collaborators: payload.user }],
+    });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -270,7 +291,10 @@ const deleteTaskFromProject = async (
   user: string
 ) => {
   try {
-    const project = await Project.findOne({ _id: id, owner: user });
+    const project = await Project.findOne({
+      _id: id,
+      $or: [{ owner: user }, { collaborators: user }],
+    });
 
     if (!project) {
       const error = new Error("Project not found");
@@ -306,6 +330,6 @@ export const projectServices = {
   addCollaboratorToProjectToDB,
   getTaskFromProject,
   addTaskToProject,
-  udpateTaskToProject,
+  updateTaskToProject,
   deleteTaskFromProject,
 };

@@ -45,8 +45,6 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   if (validateErrors(req, res)) return;
 
   try {
-    const user1 = (req as any).user;
-    console.log(user1);
     const { user, token, refreshToken } = await userServices.loginUserFromDB(
       req.body
     );

@@ -169,7 +169,7 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.user = (req as any).user;
 
-    const task = await projectServices.udpateTaskToProject(
+    const task = await projectServices.updateTaskToProject(
       req.params.projectId,
       req.params.taskId,
       req.body
